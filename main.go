@@ -10,10 +10,9 @@ import (
 func main() {
 	m := http.NewServeMux()
 
-	const addr = ":8000"
-
 	m.HandleFunc("/", handlePage)
 
+	const addr = ":8080"
 	srv := http.Server{
 		Handler:      m,
 		Addr:         addr,
@@ -21,20 +20,22 @@ func main() {
 		ReadTimeout:  30 * time.Second,
 	}
 
-	fmt.Println("Server started on port: ", addr)
+	// this blocks forever, until the server
+	// has an unrecoverable error
+	fmt.Println("server started on ", addr)
 	err := srv.ListenAndServe()
 	log.Fatal(err)
 }
 
 func handlePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	const page = `<html>
-	<body>
-	<p> Hello from the go server! </p>
-	</body>	
-	</html>
-	`
 	w.WriteHeader(200)
+	const page = `<html>
+<head></head>
+<body>
+	<p> Hello from Docker! I'm a Go server. </p>
+</body>
+</html>
+`
 	w.Write([]byte(page))
 }
